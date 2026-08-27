@@ -26,7 +26,7 @@
     }
 
     .site-wrapper {
-      max-width: 800px;
+      max-width: 900px;
       width: 100%;
       display: flex;
       flex-direction: column;
@@ -69,30 +69,38 @@
       border-radius: 4px;
     }
 
+    /* Layout dinamico a colonne libere per desktop */
     .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 20px;
-      align-items: start;
+      column-count: 3;
+      column-gap: 20px;
+    }
+
+    /* Adattamento automatico per schermi più piccoli */
+    @media (max-width: 768px) {
+      .gallery-grid {
+        column-count: 2;
+      }
     }
 
     .gallery-item {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      break-inside: avoid;
+      margin-bottom: 20px;
     }
 
     .gallery-img {
       width: 100%;
       height: auto;
+      display: block;
       border-radius: 12px;
       border: none;
       box-shadow: none;
       filter: none;
+      -webkit-touch-callout: none;
+      pointer-events: auto;
     }
   </style>
 </head>
-<body>
+<body oncontextmenu="return false;">
 
   <div class="site-wrapper">
 
@@ -103,12 +111,12 @@
 
     <div class="gallery-scroll-area">
       <div class="gallery-grid">
-        <div class="gallery-item"><img src="./Untitled Project (13).jpg" alt="Gallery Photo" class="gallery-img"></div>
-        <div class="gallery-item"><img src="./20251107_165509.png" alt="Gallery Photo" class="gallery-img"></div>
-        <div class="gallery-item"><img src="./20251124_160453.png" alt="Gallery Photo" class="gallery-img"></div>
-        <div class="gallery-item"><img src="./Progetto senza titolo_20260827_215721_0000.png" alt="Gallery Photo" class="gallery-img"></div>
-        <div class="gallery-item"><img src="./20260708_211842.jpg" alt="Gallery Photo" class="gallery-img"></div>
-        <div class="gallery-item"><img src="./untitled project (13).jpg" alt="Gallery Photo" class="gallery-img"></div>
+        <div class="gallery-item"><img src="./Untitled Project (13).jpg" alt="Gallery Photo" class="gallery-img" oncontextmenu="return false;"></div>
+        <div class="gallery-item"><img src="./20251107_165509.png" alt="Gallery Photo" class="gallery-img" oncontextmenu="return false;"></div>
+        <div class="gallery-item"><img src="./20251124_160453.png" alt="Gallery Photo" class="gallery-img" oncontextmenu="return false;"></div>
+        <div class="gallery-item"><img src="./Progetto senza titolo_20260827_215721_0000.png" alt="Gallery Photo" class="gallery-img" oncontextmenu="return false;"></div>
+        <div class="gallery-item"><img src="./20260708_211842.jpg" alt="Gallery Photo" class="gallery-img" oncontextmenu="return false;"></div>
+        <div class="gallery-item"><img src="./untitled project (13).jpg" alt="Gallery Photo" class="gallery-img" oncontextmenu="return false;"></div>
       </div>
     </div>
 
