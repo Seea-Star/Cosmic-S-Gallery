@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COSMIC-S - Gallery</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: #f5f5f7;
+      background-image: 
+        linear-gradient(#e1e1e6 1px, transparent 1px),
+        linear-gradient(90deg, #e1e1e6 1px, transparent 1px);
+      background-size: 20px 20px;
+      color: #111111;
+      font-family: 'Quicksand', sans-serif;
+      padding: 30px 10px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .site-wrapper {
+      max-width: 800px;
+      width: 100%;
+      background: #ffffff;
+      border: 3px solid #111111;
+      border-radius: 32px;
+      padding: 20px;
+      box-shadow: 6px 6px 0px #111111;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .top-banner {
+      background: #111111;
+      border: 2px solid #111111;
+      border-radius: 20px;
+      padding: 12px 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .top-banner h1 { 
+      font-size: 2rem; 
+      font-weight: 800; 
+      letter-spacing: 2px; 
+      color: #ffffff;
+    }
+
+    .box {
+      background: #ffffff;
+      border: 2px solid #111111;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 3px 3px 0px #111111;
+    }
+    
+    .box-header-accent {
+      background: #F3EEDA;
+      border-bottom: 2px solid #111111;
+      padding: 10px 16px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #111111;
+    }
+    
+    /* Scrollable area for the gallery grid */
+    .gallery-scroll-area { 
+      padding: 20px; 
+      max-height: 550px; 
+      overflow-y: auto; 
+    }
+
+    /* Scrollbar style */
+    .gallery-scroll-area::-webkit-scrollbar {
+      width: 8px;
+    }
+    .gallery-scroll-area::-webkit-scrollbar-track {
+      background: #f0f0f3;
+      border-radius: 4px;
+    }
+    .gallery-scroll-area::-webkit-scrollbar-thumb {
+      background: #111111;
+      border-radius: 4px;
+    }
+
+    /* Responsive Grid layout for mixed orientation photos */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px;
+      align-items: center;
+    }
+
+    .gallery-item {
+      background: #F3EEDA;
+      border: 2px solid #111111;
+      border-radius: 16px;
+      padding: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 3px 3px 0px #111111;
+      overflow: hidden;
+      height: 180px; /* Uniform initial thumbnail box */
+    }
+
+    /* Image styling with smooth hover zoom effect */
+    .gallery-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* Adapts vertical, horizontal, and phone screenshots nicely */
+      border-radius: 10px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    .gallery-item:hover .gallery-img {
+      transform: scale(1.15); /* Expands nicely when hovered */
+    }
+  </style>
+</head>
+<body>
+
+  <div class="site-wrapper">
+
+    <!-- Header with Home button -->
+    <header class="top-banner">
+      <h1>GALLERY</h1>
+      <a href="https://seea-star.github.io/Cosmic-S-Home/" style="background:#F3EEDA; color:#111; border:2px solid #111; padding:8px 14px; border-radius:12px; font-weight:800; font-size:0.75rem; text-decoration:none; box-shadow:2px 2px 0px #111;">← HOME</a>
+    </header>
+
+    <!-- Scrollable gallery section -->
+    <div class="box">
+      <div class="box-header-accent"><span>photos</span><span>✨📷</span></div>
+      <div class="gallery-scroll-area">
+        
+        <div class="gallery-grid">
+          <!-- Sostituisci i nomi dei file con le tue foto effettive -->
+          <div class="gallery-item"><img src="1000046524.heic" alt="Gallery Photo" class="gallery-img"></div>
+          <div class="gallery-item"><img src="1000046927.heic" alt="Gallery Photo" class="gallery-img"></div>
+          <div class="gallery-item"><img src="1000062530.heic" alt="Gallery Photo" class="gallery-img"></div>
+          <div class="gallery-item"><img src="1000062365.heic" alt="Gallery Photo" class="gallery-img"></div>
+          <div class="gallery-item"><img src="1000046923.heic" alt="Gallery Photo" class="gallery-img"></div>
+          <div class="gallery-item"><img src="1000042821.heic" alt="Gallery Photo" class="gallery-img"></div>
+          <div class="gallery-item"><img src="1000040216.heic" alt="Gallery Photo" class="gallery-img"></div>
+          <div class="gallery-item"><img src="1000063027.jpg" alt="Gallery Photo" class="gallery-img"></div>
+          <div class="gallery-item"><img src="1000052305.jpg" alt="Gallery Photo" class="gallery-img"></div>
+          <div class="gallery-item"><img src="1000047181.jpg" alt="Gallery Photo" class="gallery-img"></div>
+          <div class="gallery-item"><img src="1000075011.jpg" alt="Gallery Photo" class="gallery-img"></div>
+          <div class="gallery-item"><img src="1000075009.jpg" alt="Gallery Photo" class="gallery-img"></div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
+
