@@ -28,14 +28,9 @@
     .site-wrapper {
       max-width: 800px;
       width: 100%;
-      background: #ffffff;
-      border: 3px solid #111111;
-      border-radius: 32px;
-      padding: 20px;
-      box-shadow: 6px 6px 0px #111111;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 20px;
     }
 
     .top-banner {
@@ -46,6 +41,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      box-shadow: 4px 4px 0px #111111;
     }
 
     .top-banner h1 { 
@@ -55,31 +51,11 @@
       color: #ffffff;
     }
 
-    .box {
-      background: #ffffff;
-      border: 2px solid #111111;
-      border-radius: 22px;
-      overflow: hidden;
-      box-shadow: 3px 3px 0px #111111;
-    }
-    
-    .box-header-accent {
-      background: #F3EEDA;
-      border-bottom: 2px solid #111111;
-      padding: 10px 16px;
-      font-weight: 700;
-      font-size: 0.85rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: #111111;
-    }
-    
-    /* Scrollable area for the gallery grid */
+    /* Scrollable gallery area directly on the grid */
     .gallery-scroll-area { 
-      padding: 20px; 
-      max-height: 550px; 
+      max-height: 600px; 
       overflow-y: auto; 
+      padding-right: 5px;
     }
 
     /* Scrollbar style */
@@ -95,39 +71,37 @@
       border-radius: 4px;
     }
 
-    /* Responsive Grid layout for mixed orientation photos */
+    /* Responsive Grid layout without boxes or backgrounds */
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 16px;
+      gap: 20px;
       align-items: center;
     }
 
     .gallery-item {
-      background: #F3EEDA;
-      border: 2px solid #111111;
-      border-radius: 16px;
-      padding: 8px;
       display: flex;
       justify-content: center;
       align-items: center;
-      box-shadow: 3px 3px 0px #111111;
       overflow: hidden;
-      height: 180px; /* Uniform initial thumbnail box */
+      height: 180px;
     }
 
-    /* Image styling with smooth hover zoom effect */
+    /* Image styling: no borders, clean hover zoom */
     .gallery-img {
       width: 100%;
       height: 100%;
-      object-fit: cover; /* Adapts vertical, horizontal, and phone screenshots nicely */
-      border-radius: 10px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      object-fit: cover;
+      border-radius: 12px;
+      border: none;
+      box-shadow: none;
+      filter: none;
+      transition: transform 0.3s ease;
       cursor: pointer;
     }
 
     .gallery-item:hover .gallery-img {
-      transform: scale(1.15); /* Expands nicely when hovered */
+      transform: scale(1.15);
     }
   </style>
 </head>
@@ -141,27 +115,21 @@
       <a href="https://seea-star.github.io/Cosmic-S-Home/" style="background:#F3EEDA; color:#111; border:2px solid #111; padding:8px 14px; border-radius:12px; font-weight:800; font-size:0.75rem; text-decoration:none; box-shadow:2px 2px 0px #111;">← HOME</a>
     </header>
 
-    <!-- Scrollable gallery section -->
-    <div class="box">
-      <div class="box-header-accent"><span>photos</span><span>✨📷</span></div>
-      <div class="gallery-scroll-area">
-        
-        <div class="gallery-grid">
-          <!-- Sostituisci i nomi dei file con le tue foto effettive -->
-          <div class="gallery-item"><img src="1000046524.heic" alt="Gallery Photo" class="gallery-img"></div>
-          <div class="gallery-item"><img src="1000046927.heic" alt="Gallery Photo" class="gallery-img"></div>
-          <div class="gallery-item"><img src="1000062530.heic" alt="Gallery Photo" class="gallery-img"></div>
-          <div class="gallery-item"><img src="1000062365.heic" alt="Gallery Photo" class="gallery-img"></div>
-          <div class="gallery-item"><img src="1000046923.heic" alt="Gallery Photo" class="gallery-img"></div>
-          <div class="gallery-item"><img src="1000042821.heic" alt="Gallery Photo" class="gallery-img"></div>
-          <div class="gallery-item"><img src="1000040216.heic" alt="Gallery Photo" class="gallery-img"></div>
-          <div class="gallery-item"><img src="1000063027.jpg" alt="Gallery Photo" class="gallery-img"></div>
-          <div class="gallery-item"><img src="1000052305.jpg" alt="Gallery Photo" class="gallery-img"></div>
-          <div class="gallery-item"><img src="1000047181.jpg" alt="Gallery Photo" class="gallery-img"></div>
-          <div class="gallery-item"><img src="1000075011.jpg" alt="Gallery Photo" class="gallery-img"></div>
-          <div class="gallery-item"><img src="1000075009.jpg" alt="Gallery Photo" class="gallery-img"></div>
-        </div>
-
+    <!-- Gallery grid without white box/background -->
+    <div class="gallery-scroll-area">
+      <div class="gallery-grid">
+        <div class="gallery-item"><img src="20260704_172239.heic" alt="Gallery Photo" class="gallery-img"></div>
+        <div class="gallery-item"><img src="20260826_204702.heic" alt="Gallery Photo" class="gallery-img"></div>
+        <div class="gallery-item"><img src="1000062530.heic" alt="Gallery Photo" class="gallery-img"></div>
+        <div class="gallery-item"><img src="1000062365.heic" alt="Gallery Photo" class="gallery-img"></div>
+        <div class="gallery-item"><img src="1000046923.heic" alt="Gallery Photo" class="gallery-img"></div>
+        <div class="gallery-item"><img src="1000042821.heic" alt="Gallery Photo" class="gallery-img"></div>
+        <div class="gallery-item"><img src="1000040216.heic" alt="Gallery Photo" class="gallery-img"></div>
+        <div class="gallery-item"><img src="1000063027.jpg" alt="Gallery Photo" class="gallery-img"></div>
+        <div class="gallery-item"><img src="1000052305.jpg" alt="Gallery Photo" class="gallery-img"></div>
+        <div class="gallery-item"><img src="1000047181.jpg" alt="Gallery Photo" class="gallery-img"></div>
+        <div class="gallery-item"><img src="1000075011.jpg" alt="Gallery Photo" class="gallery-img"></div>
+        <div class="gallery-item"><img src="1000075009.jpg" alt="Gallery Photo" class="gallery-img"></div>
       </div>
     </div>
 
@@ -169,4 +137,3 @@
 
 </body>
 </html>
-
