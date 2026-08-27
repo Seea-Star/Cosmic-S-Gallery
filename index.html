@@ -69,16 +69,16 @@
       border-radius: 4px;
     }
 
-    /* Layout dinamico a colonne libere per desktop */
+    /* Modalità Desktop: colonne multiple */
     .gallery-grid {
       column-count: 3;
       column-gap: 20px;
     }
 
-    /* Adattamento automatico per schermi più piccoli */
+    /* Modalità Telefono: una sola colonna, immagini una sotto l'altra */
     @media (max-width: 768px) {
       .gallery-grid {
-        column-count: 2;
+        column-count: 1;
       }
     }
 
