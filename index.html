@@ -270,6 +270,27 @@
       font-family: 'Quicksand', sans-serif;
       z-index: 10000;
     }
+
+    /* Stile per le frecce di navigazione nei lightbox */
+    .lightbox-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      border: none;
+      font-size: 2rem;
+      padding: 10px 15px;
+      cursor: pointer;
+      border-radius: 8px;
+      z-index: 10000;
+      transition: background 0.3s ease;
+    }
+    .lightbox-arrow:hover {
+      background: rgba(255, 255, 255, 0.4);
+    }
+    #lightbox-prev, #interactive-prev { left: 25px; }
+    #lightbox-next, #interactive-next { right: 25px; }
   </style>
 </head>
 <body oncontextmenu="return false;">
@@ -312,12 +333,16 @@
   <!-- Finestra modale standard per le foto normali -->
   <div id="lightbox-modal">
     <button id="lightbox-close">&times;</button>
+    <button id="lightbox-prev" class="lightbox-arrow">&#10094;</button>
+    <button id="lightbox-next" class="lightbox-arrow">&#10095;</button>
     <img id="lightbox-img" src="" alt="Fullscreen View">
   </div>
 
   <!-- Finestra modale speciale (schermo diviso + zoomabile) per l'immagine con la scritta -->
   <div id="interactive-modal">
     <button id="interactive-close">&times;</button>
+    <button id="interactive-prev" class="lightbox-arrow">&#10094;</button>
+    <button id="interactive-next" class="lightbox-arrow">&#10095;</button>
     <div class="interactive-modal-content">
       <div class="interactive-modal-img-container">
         <img id="interactive-modal-img" src="" alt="Day and Night Art">
@@ -336,30 +361,61 @@
     const modal = document.getElementById('lightbox-modal');
     const modalImg = document.getElementById('lightbox-img');
     const closeBtn = document.getElementById('lightbox-close');
+    const prevBtn = document.getElementById('lightbox-prev');
+    const nextBtn = document.getElementById('lightbox-next');
 
     const intModal = document.getElementById('interactive-modal');
     const intModalImg = document.getElementById('interactive-modal-img');
     const intCloseBtn = document.getElementById('interactive-close');
+    const intPrevBtn = document.getElementById('interactive-prev');
+    const intNextBtn = document.getElementById('interactive-next');
 
     const galleryImages = document.querySelectorAll('.gallery-img');
+    let currentIndex = 0;
 
-    galleryImages.forEach(img => {
+    function updateModalContent(index) {
+      const img = galleryImages[index];
+      const parentItem = img.closest('.gallery-item');
+      
+      scale = 1;
+      intScale = 1;
+      modalImg.style.transform = `scale(1)`;
+      intModalImg.style.transform = `scale(1)`;
+
+      if (parentItem.classList.contains('interactive')) {
+        modal.style.display = 'none';
+        intModal.style.display = 'flex';
+        intModalImg.src = img.src;
+      } else {
+        intModal.style.display = 'none';
+        modal.style.display = 'flex';
+        modalImg.src = img.src;
+      }
+    }
+
+    galleryImages.forEach((img, index) => {
       img.addEventListener('click', (e) => {
-        const parentItem = img.closest('.gallery-item');
-        
-        if (parentItem.classList.contains('interactive')) {
-          intModal.style.display = 'flex';
-          intModalImg.src = img.src;
-          intScale = 1;
-          intModalImg.style.transform = `scale(${intScale})`;
-        } else {
-          modal.style.display = 'flex';
-          modalImg.src = img.src;
-          scale = 1;
-          modalImg.style.transform = `scale(${scale})`;
-        }
+        currentIndex = index;
+        updateModalContent(currentIndex);
       });
     });
+
+    function showPrev(e) {
+      e.stopPropagation();
+      currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+      updateModalContent(currentIndex);
+    }
+
+    function showNext(e) {
+      e.stopPropagation();
+      currentIndex = (currentIndex + 1) % galleryImages.length;
+      updateModalContent(currentIndex);
+    }
+
+    prevBtn.addEventListener('click', showPrev);
+    nextBtn.addEventListener('click', showNext);
+    intPrevBtn.addEventListener('click', showPrev);
+    intNextBtn.addEventListener('click', showNext);
 
     // Zoom foto normali
     let scale = 1;
@@ -399,3 +455,4 @@
 
 </body>
 </html>
+
