@@ -158,7 +158,7 @@
       letter-spacing: 0.5px;
     }
 
-    /* Stile per il visualizzatore a schermo intero (Lightbox) */
+    /* Stile per il visualizzatore a schermo intero (Lightbox standard) */
     #lightbox-modal {
       display: none;
       position: fixed;
@@ -181,7 +181,79 @@
       cursor: zoom-out;
       transition: transform 0.2s ease;
     }
-    #lightbox-close {
+
+    /* Stile per il lightbox speciale dell'immagine interattiva (schermo diviso) */
+    #interactive-modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(17, 17, 17, 0.95);
+      justify-content: center;
+      align-items: center;
+      padding: 30px;
+    }
+    .interactive-modal-content {
+      display: flex;
+      background: #1e1e1e;
+      border: 2px solid #333;
+      border-radius: 16px;
+      max-width: 900px;
+      width: 100%;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .interactive-modal-img-container {
+      flex: 1;
+      background: #111;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .interactive-modal-img-container img {
+      max-width: 100%;
+      max-height: 70vh;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+    .interactive-modal-text-container {
+      flex: 1;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      color: #ffffff;
+    }
+    .interactive-modal-text-container .overlay-title {
+      font-size: 1.2rem;
+      margin-bottom: 12px;
+    }
+    .interactive-modal-text-container .overlay-text {
+      font-size: 0.85rem;
+      margin-bottom: 15px;
+      line-height: 1.6;
+    }
+    .interactive-modal-text-container .overlay-disclaimer {
+      font-size: 0.75rem;
+    }
+
+    /* Layout responsive per smartphone del lightbox diviso */
+    @media (max-width: 768px) {
+      .interactive-modal-content {
+        flex-direction: column;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+      .interactive-modal-text-container {
+        padding: 20px;
+      }
+    }
+
+    #lightbox-close, #interactive-close {
       position: absolute;
       top: 20px;
       right: 25px;
@@ -192,6 +264,7 @@
       background: none;
       border: none;
       font-family: 'Quicksand', sans-serif;
+      z-index: 10000;
     }
   </style>
 </head>
@@ -231,33 +304,59 @@
 
   </div>
 
-  <!-- Finestra modale per lo schermo intero -->
+  <!-- Finestra modale standard per le foto normali -->
   <div id="lightbox-modal">
     <button id="lightbox-close">&times;</button>
     <img id="lightbox-img" src="" alt="Fullscreen View">
+  </div>
+
+  <!-- Finestra modale speciale (schermo diviso) per l'immagine con la scritta -->
+  <div id="interactive-modal">
+    <button id="interactive-close">&times;</button>
+    <div class="interactive-modal-content">
+      <div class="interactive-modal-img-container">
+        <img id="interactive-modal-img" src="" alt="Day and Night Art">
+      </div>
+      <div class="interactive-modal-text-container">
+        <div class="overlay-title">Day & Night (Inspiration)</div>
+        <p class="overlay-text">
+          Originally created as a middle school project inspired by René Magritte's style. I later redesigned it digitally, playing with lighting and photo editing to merge two opposing realities into a single scene!
+        </p>
+        <div class="overlay-disclaimer">Not AI. Just real photos & photo editing!</div>
+      </div>
+    </div>
   </div>
 
   <script>
     const modal = document.getElementById('lightbox-modal');
     const modalImg = document.getElementById('lightbox-img');
     const closeBtn = document.getElementById('lightbox-close');
+
+    const intModal = document.getElementById('interactive-modal');
+    const intModalImg = document.getElementById('interactive-modal-img');
+    const intCloseBtn = document.getElementById('interactive-close');
+
     const galleryImages = document.querySelectorAll('.gallery-img');
 
     galleryImages.forEach(img => {
       img.addEventListener('click', (e) => {
-        // Evita l'apertura se si clicca sull'immagine interattiva mentre la card overlay è attiva
-        if (img.closest('.gallery-item').classList.contains('interactive')) {
-          const overlay = img.nextElementSibling;
-          // Se siamo su mobile e l'overlay è visibile, oppure se si preferisce aprirla sempre:
-          // Apriamo comunque la modale al click diretto sull'immagine.
+        const parentItem = img.closest('.gallery-item');
+        
+        if (parentItem.classList.contains('interactive')) {
+          // Apre la modale a schermo diviso per l'immagine speciale
+          intModal.style.display = 'flex';
+          intModalImg.src = img.src;
+        } else {
+          // Apre la modale normale per tutte le altre foto
+          modal.style.display = 'flex';
+          modalImg.src = img.src;
+          scale = 1;
+          modalImg.style.transform = `scale(${scale})`;
         }
-        modal.style.display = 'flex';
-        modalImg.src = img.src;
-        scale = 1;
-        modalImg.style.transform = `scale(${scale})`;
       });
     });
 
+    // Zoom per le immagini normali
     let scale = 1;
     modalImg.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -265,16 +364,20 @@
       modalImg.style.transform = `scale(${scale})`;
     });
 
-    function closeModal() {
+    function closeAllModals() {
       modal.style.display = 'none';
+      intModal.style.display = 'none';
       scale = 1;
       modalImg.style.transform = `scale(1)`;
     }
 
-    closeBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', closeModal);
-    modalImg.addEventListener('click', (e) => {
-      // Per evitare che il click sull'immagine chiuda subito la modale se si sta facendo zoom
+    closeBtn.addEventListener('click', closeAllModals);
+    modal.addEventListener('click', closeAllModals);
+    modalImg.addEventListener('click', (e) => { e.stopPropagation(); });
+
+    intCloseBtn.addEventListener('click', closeAllModals);
+    intModal.addEventListener('click', closeAllModals);
+    document.querySelector('.interactive-modal-content').addEventListener('click', (e) => {
       e.stopPropagation();
     });
   </script>
