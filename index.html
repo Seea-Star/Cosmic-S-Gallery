@@ -195,6 +195,7 @@
       justify-content: center;
       align-items: center;
       padding: 30px;
+      overflow: auto;
     }
     .interactive-modal-content {
       display: flex;
@@ -213,12 +214,15 @@
       justify-content: center;
       align-items: center;
       padding: 20px;
+      overflow: hidden;
     }
     .interactive-modal-img-container img {
       max-width: 100%;
       max-height: 70vh;
       object-fit: contain;
       border-radius: 8px;
+      cursor: zoom-in;
+      transition: transform 0.2s ease;
     }
     .interactive-modal-text-container {
       flex: 1;
@@ -310,7 +314,7 @@
     <img id="lightbox-img" src="" alt="Fullscreen View">
   </div>
 
-  <!-- Finestra modale speciale (schermo diviso) per l'immagine con la scritta -->
+  <!-- Finestra modale speciale (schermo diviso + zoomabile) per l'immagine con la scritta -->
   <div id="interactive-modal">
     <button id="interactive-close">&times;</button>
     <div class="interactive-modal-content">
@@ -343,11 +347,11 @@
         const parentItem = img.closest('.gallery-item');
         
         if (parentItem.classList.contains('interactive')) {
-          // Apre la modale a schermo diviso per l'immagine speciale
           intModal.style.display = 'flex';
           intModalImg.src = img.src;
+          intScale = 1;
+          intModalImg.style.transform = `scale(${intScale})`;
         } else {
-          // Apre la modale normale per tutte le altre foto
           modal.style.display = 'flex';
           modalImg.src = img.src;
           scale = 1;
@@ -356,7 +360,7 @@
       });
     });
 
-    // Zoom per le immagini normali
+    // Zoom foto normali
     let scale = 1;
     modalImg.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -364,11 +368,21 @@
       modalImg.style.transform = `scale(${scale})`;
     });
 
+    // Zoom foto interattiva nel modale diviso
+    let intScale = 1;
+    intModalImg.addEventListener('click', (e) => {
+      e.stopPropagation();
+      intScale = intScale === 1 ? 1.8 : 1;
+      intModalImg.style.transform = `scale(${intScale})`;
+    });
+
     function closeAllModals() {
       modal.style.display = 'none';
       intModal.style.display = 'none';
       scale = 1;
       modalImg.style.transform = `scale(1)`;
+      intScale = 1;
+      intModalImg.style.transform = `scale(1)`;
     }
 
     closeBtn.addEventListener('click', closeAllModals);
@@ -384,3 +398,4 @@
 
 </body>
 </html>
+
