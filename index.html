@@ -101,6 +101,7 @@
       transition: filter 0.3s ease, transform 0.3s ease;
       -webkit-touch-callout: none;
       pointer-events: auto;
+      cursor: zoom-in;
     }
 
     /* Effetto Hover specifico per l'immagine interattiva */
@@ -156,6 +157,42 @@
       padding-top: 6px;
       letter-spacing: 0.5px;
     }
+
+    /* Stile per il visualizzatore a schermo intero (Lightbox) */
+    #lightbox-modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(17, 17, 17, 0.95);
+      justify-content: center;
+      align-items: center;
+      overflow: auto;
+      padding: 20px;
+    }
+    #lightbox-modal img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 8px;
+      cursor: zoom-out;
+      transition: transform 0.2s ease;
+    }
+    #lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 25px;
+      color: #ffffff;
+      font-size: 2.5rem;
+      font-weight: 800;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: 'Quicksand', sans-serif;
+    }
   </style>
 </head>
 <body oncontextmenu="return false;">
@@ -193,6 +230,54 @@
     </div>
 
   </div>
+
+  <!-- Finestra modale per lo schermo intero -->
+  <div id="lightbox-modal">
+    <button id="lightbox-close">&times;</button>
+    <img id="lightbox-img" src="" alt="Fullscreen View">
+  </div>
+
+  <script>
+    const modal = document.getElementById('lightbox-modal');
+    const modalImg = document.getElementById('lightbox-img');
+    const closeBtn = document.getElementById('lightbox-close');
+    const galleryImages = document.querySelectorAll('.gallery-img');
+
+    galleryImages.forEach(img => {
+      img.addEventListener('click', (e) => {
+        // Evita l'apertura se si clicca sull'immagine interattiva mentre la card overlay è attiva
+        if (img.closest('.gallery-item').classList.contains('interactive')) {
+          const overlay = img.nextElementSibling;
+          // Se siamo su mobile e l'overlay è visibile, oppure se si preferisce aprirla sempre:
+          // Apriamo comunque la modale al click diretto sull'immagine.
+        }
+        modal.style.display = 'flex';
+        modalImg.src = img.src;
+        scale = 1;
+        modalImg.style.transform = `scale(${scale})`;
+      });
+    });
+
+    let scale = 1;
+    modalImg.addEventListener('click', (e) => {
+      e.stopPropagation();
+      scale = scale === 1 ? 1.8 : 1;
+      modalImg.style.transform = `scale(${scale})`;
+    });
+
+    function closeModal() {
+      modal.style.display = 'none';
+      scale = 1;
+      modalImg.style.transform = `scale(1)`;
+    }
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', closeModal);
+    modalImg.addEventListener('click', (e) => {
+      // Per evitare che il click sull'immagine chiuda subito la modale se si sta facendo zoom
+      e.stopPropagation();
+    });
+  </script>
 
 </body>
 </html>
