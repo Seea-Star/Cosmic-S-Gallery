@@ -3,11 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>COSMIC-S - Gallery</title>
+  <title>COSMIC-S - Gallery Feed</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Script ufficiale di WidgetStar per il Like Button -->
+  <script src="https://u.widget.st/ar.js" async></script>
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -33,6 +36,7 @@
       gap: 20px;
     }
 
+    /* Banner in alto con ombra colore crema #F3EEDA */
     .top-banner {
       background: #111111;
       border: 2px solid #111111;
@@ -41,7 +45,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 4px 4px 0px #111111;
+      box-shadow: 4px 4px 0px #F3EEDA;
     }
 
     .top-banner h1 { 
@@ -52,7 +56,7 @@
     }
 
     .gallery-scroll-area { 
-      max-height: 600px; 
+      max-height: 75vh; 
       overflow-y: auto; 
       padding-right: 5px;
     }
@@ -69,228 +73,140 @@
       border-radius: 4px;
     }
 
-    /* Modalità Desktop: colonne multiple */
+    /* Griglia stile Pinterest/Social a 3 colonne */
     .gallery-grid {
       column-count: 3;
       column-gap: 20px;
     }
 
-    /* Modalità Telefono: una sola colonna, immagini una sotto l'altra */
     @media (max-width: 768px) {
       .gallery-grid {
         column-count: 1;
       }
     }
 
-    .gallery-item {
+    /* CARD STILE POST SOCIAL con ombra colore crema #F3EEDA */
+    .post-card {
       break-inside: avoid;
-      margin-bottom: 20px;
-      position: relative;
+      margin-bottom: 25px;
+      background: #ffffff;
+      border: 2px solid #111111;
+      border-radius: 16px;
       overflow: hidden;
-      border-radius: 12px;
+      box-shadow: 3px 3px 0px #F3EEDA;
+      display: flex;
+      flex-direction: column;
     }
 
-    .gallery-img {
+    /* Header del Post (Foto profilo + Nome) - Sfondo Nero */
+    .post-header {
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #111111;
+      border-bottom: 1.5px solid #111111;
+    }
+
+    .post-pfp {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1.5px solid #F3EEDA;
+      object-fit: cover;
+      background: #111;
+    }
+
+    .post-username {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.1;
+    }
+
+    /* Immagine del Post */
+    .post-img {
       width: 100%;
       height: auto;
       display: block;
-      border-radius: 12px;
-      border: none;
-      box-shadow: none;
-      filter: none;
-      transition: filter 0.3s ease, transform 0.3s ease;
-      -webkit-touch-callout: none;
-      pointer-events: auto;
-      cursor: zoom-in;
     }
 
-    /* Effetto Hover specifico per l'immagine interattiva */
-    .gallery-item.interactive:hover .gallery-img {
-      filter: blur(6px) brightness(0.7);
-      transform: scale(1.03);
-    }
-
-    .gallery-overlay-card {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(17, 17, 17, 0.85);
-      color: #ffffff;
-      padding: 18px;
+    /* Barra inferiore con Pulsante Like e Freccia - Sfondo Nero */
+    .post-actions-bar {
+      padding: 8px 12px;
+      background: #111111;
+      border-top: 1.5px solid #111111;
       display: flex;
-      flex-direction: column;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
-      text-align: center;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      border-radius: 12px;
-      pointer-events: none;
     }
 
-    .gallery-item.interactive:hover .gallery-overlay-card {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .overlay-title {
-      font-size: 0.95rem;
+    /* Pulsante Freccina per Espandere la Descrizione */
+    .toggle-caption-btn {
+      background: none;
+      border: none;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 0.85rem;
       font-weight: 800;
       color: #F3EEDA;
-      margin-bottom: 6px;
+      cursor: pointer;
+      padding: 4px 8px;
+      display: flex;
+      align-items: center;
+      transition: background 0.2s ease;
+      border-radius: 6px;
     }
 
-    .overlay-text {
+    .toggle-caption-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .arrow-icon {
+      font-size: 0.75rem;
+      transition: transform 0.3s ease;
+    }
+
+    /* Sezione Descrizione Espandibile */
+    .post-caption-container {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-out, padding 0.3s ease;
+      background: #1a1a1a;
+      color: #ffffff;
+      padding: 0 14px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.2);
+    }
+
+    .post-card.open .post-caption-container {
+      max-height: 800px;
+      padding: 12px 14px;
+    }
+
+    .post-card.open .arrow-icon {
+      transform: rotate(180deg);
+    }
+
+    .caption-title {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #F3EEDA;
+      margin-bottom: 4px;
+    }
+
+    .caption-text {
       font-size: 0.72rem;
       line-height: 1.4;
       font-weight: 600;
       margin-bottom: 8px;
     }
 
-    .overlay-disclaimer {
-      font-size: 0.65rem;
+    .caption-disclaimer {
+      font-size: 0.62rem;
       font-weight: 700;
       color: #F3EEDA;
       border-top: 1px dashed rgba(255, 255, 255, 0.3);
       padding-top: 6px;
-      letter-spacing: 0.5px;
     }
-
-    /* Stile per il visualizzatore a schermo intero (Lightbox standard) */
-    #lightbox-modal {
-      display: none;
-      position: fixed;
-      z-index: 9999;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(17, 17, 17, 0.95);
-      justify-content: center;
-      align-items: center;
-      overflow: auto;
-      padding: 20px;
-    }
-    #lightbox-modal img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-      border-radius: 8px;
-      cursor: zoom-out;
-      transition: transform 0.2s ease;
-    }
-
-    /* Stile per il lightbox speciale dell'immagine interattiva (schermo diviso) */
-    #interactive-modal {
-      display: none;
-      position: fixed;
-      z-index: 9999;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(17, 17, 17, 0.95);
-      justify-content: center;
-      align-items: center;
-      padding: 30px;
-      overflow: auto;
-    }
-    .interactive-modal-content {
-      display: flex;
-      background: #1e1e1e;
-      border: 2px solid #333;
-      border-radius: 16px;
-      max-width: 900px;
-      width: 100%;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-    .interactive-modal-img-container {
-      flex: 1;
-      background: #111;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      overflow: hidden;
-    }
-    .interactive-modal-img-container img {
-      max-width: 100%;
-      max-height: 70vh;
-      object-fit: contain;
-      border-radius: 8px;
-      cursor: zoom-in;
-      transition: transform 0.2s ease;
-    }
-    .interactive-modal-text-container {
-      flex: 1;
-      padding: 30px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      color: #ffffff;
-    }
-    .interactive-modal-text-container .overlay-title {
-      font-size: 1.2rem;
-      margin-bottom: 12px;
-    }
-    .interactive-modal-text-container .overlay-text {
-      font-size: 0.85rem;
-      margin-bottom: 15px;
-      line-height: 1.6;
-    }
-    .interactive-modal-text-container .overlay-disclaimer {
-      font-size: 0.75rem;
-    }
-
-    /* Layout responsive per smartphone del lightbox diviso */
-    @media (max-width: 768px) {
-      .interactive-modal-content {
-        flex-direction: column;
-        max-height: 90vh;
-        overflow-y: auto;
-      }
-      .interactive-modal-text-container {
-        padding: 20px;
-      }
-    }
-
-    #lightbox-close, #interactive-close {
-      position: absolute;
-      top: 20px;
-      right: 25px;
-      color: #ffffff;
-      font-size: 2.5rem;
-      font-weight: 800;
-      cursor: pointer;
-      background: none;
-      border: none;
-      font-family: 'Quicksand', sans-serif;
-      z-index: 10000;
-    }
-
-    /* Stile per le frecce di navigazione nei lightbox */
-    .lightbox-arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(255, 255, 255, 0.2);
-      color: #ffffff;
-      border: none;
-      font-size: 2rem;
-      padding: 10px 15px;
-      cursor: pointer;
-      border-radius: 8px;
-      z-index: 10000;
-      transition: background 0.3s ease;
-    }
-    .lightbox-arrow:hover {
-      background: rgba(255, 255, 255, 0.4);
-    }
-    #lightbox-prev, #interactive-prev { left: 25px; }
-    #lightbox-next, #interactive-next { right: 25px; }
   </style>
 </head>
 <body oncontextmenu="return false;">
@@ -304,156 +220,167 @@
 
     <div class="gallery-scroll-area">
       <div class="gallery-grid">
-        <div class="gallery-item"><img src="./Senza titolo 52_20261016080755.png" alt="Gallery Photo" class="gallery-img" oncontextmenu="return false;"></div>
-        <div class="gallery-item"><img src="./Senza titolo 18_20260922200050.png" alt="Gallery Photo" class="gallery-img" oncontextmenu="return false;"></div>
-        <div class="gallery-item"><img src="./a3e910bf-f488-4cf1-aae8-248de7c4fb7c_20260827_224924_0000.jpg" alt="Gallery Photo" class="gallery-img" oncontextmenu="return false;"></div>
-        <div class="gallery-item"><img src="./bc11eaa4-c3ca-4038-bbe0-3e8ed2e74c45_20260827_225003_0000.jpg" alt="Gallery Photo" class="gallery-img" oncontextmenu="return false;"></div>
-        
-        <!-- Immagine con effetto interattivo (Untitled Project (13).jpg) -->
-        <div class="gallery-item interactive">
-          <img src="./Untitled Project (13).jpg" alt="Day and Night Art" class="gallery-img" oncontextmenu="return false;">
-          <div class="gallery-overlay-card">
-            <div class="overlay-title">Day & Night (Inspiration)</div>
-            <p class="overlay-text">
-              Originally created as a middle school project inspired by René Magritte's style. I later redesigned it digitally, playing with lighting and photo editing to merge two opposing realities into a single scene!
-            </p>
-            <div class="overlay-disclaimer">Not AI. Just real photos & photo editing!</div>
+
+        <!-- IMMAGINE 1 -->
+        <div class="post-card">
+          <div class="post-header">
+            <img src="https://cosmic-seea.neocities.org/20260826_004752_0000.png" class="post-pfp" alt="PFP">
+            <span class="post-username">Seea-Star</span>
+          </div>
+          <img src="https://raw.githubusercontent.com/Seea-Star/Cosmic-S-Gallery/refs/heads/main/Screenshot_20260903_130821_Gallery.jpg" class="post-img" alt="Gallery Photo">
+          <div class="post-actions-bar">
+            <ws-widget type="like" iid="21203"></ws-widget>
           </div>
         </div>
 
-        <div class="gallery-item"><img src="./6595c956-4a64-44bc-96a9-246b6257276e_20260827_224000_0000.jpg" alt="Gallery Photo" class="gallery-img" oncontextmenu="return false;"></div>
-        <div class="gallery-item"><img src="./e409e28d-e968-4aac-9160-838b74ea61cb_20260827_223219_0000.jpg" alt="Gallery Photo" class="gallery-img" oncontextmenu="return false;"></div>
-        <div class="gallery-item"><img src="./94611894-fbf6-4adc-aebe-7396d4784e2f_20260827_223201_0000.jpg" alt="Gallery Photo" class="gallery-img" oncontextmenu="return false;"></div>
-        <div class="gallery-item"><img src="./3_20260827_231708_0002.png" alt="Gallery Photo" class="gallery-img" oncontextmenu="return false;"></div>
-        <div class="gallery-item"><img src="./be80fdf0-c972-424b-9121-13691214e531_20260827_223055_0000.jpg" alt="Gallery Photo" class="gallery-img" oncontextmenu="return false;"></div>
+        <!-- IMMAGINE 2 -->
+        <div class="post-card">
+          <div class="post-header">
+            <img src="https://cosmic-seea.neocities.org/20260826_004752_0000.png" class="post-pfp" alt="PFP">
+            <span class="post-username">Seea-Star</span>
+          </div>
+          <img src="https://raw.githubusercontent.com/Seea-Star/Cosmic-S-Gallery/refs/heads/main/Senza%20titolo%2052_20261016080755.png" class="post-img" alt="Gallery Photo">
+          <div class="post-actions-bar">
+            <ws-widget type="like" iid="21203"></ws-widget>
+          </div>
+        </div>
+
+        <!-- IMMAGINE 3 -->
+        <div class="post-card">
+          <div class="post-header">
+            <img src="https://cosmic-seea.neocities.org/20260826_004752_0000.png" class="post-pfp" alt="PFP">
+            <span class="post-username">Seea-Star</span>
+          </div>
+          <img src="https://raw.githubusercontent.com/Seea-Star/Cosmic-S-Gallery/refs/heads/main/Senza%20titolo%2018_20260922200050.png" class="post-img" alt="Gallery Photo">
+          <div class="post-actions-bar">
+            <ws-widget type="like" iid="21203"></ws-widget>
+          </div>
+        </div>
+
+        <!-- IMMAGINE 4 -->
+        <div class="post-card">
+          <div class="post-header">
+            <img src="https://cosmic-seea.neocities.org/20260826_004752_0000.png" class="post-pfp" alt="PFP">
+            <span class="post-username">Seea-Star</span>
+          </div>
+          <img src="https://raw.githubusercontent.com/Seea-Star/Cosmic-S-Gallery/refs/heads/main/a3e910bf-f488-4cf1-aae8-248de7c4fb7c_20260827_224924_0000.jpg" class="post-img" alt="Gallery Photo">
+          <div class="post-actions-bar">
+            <ws-widget type="like" iid="21203"></ws-widget>
+          </div>
+        </div>
+
+        <!-- IMMAGINE 5 -->
+        <div class="post-card">
+          <div class="post-header">
+            <img src="https://cosmic-seea.neocities.org/20260826_004752_0000.png" class="post-pfp" alt="PFP">
+            <span class="post-username">Seea-Star</span>
+          </div>
+          <img src="https://raw.githubusercontent.com/Seea-Star/Cosmic-S-Gallery/refs/heads/main/bc11eaa4-c3ca-4038-bbe0-3e8ed2e74c45_20260827_225003_0000.jpg" class="post-img" alt="Gallery Photo">
+          <div class="post-actions-bar">
+            <ws-widget type="like" iid="21203"></ws-widget>
+          </div>
+        </div>
+
+        <!-- IMMAGINE 6 (INTERATTIVA CON DESCRIZIONE E FRECCIA) -->
+        <div class="post-card">
+          <div class="post-header">
+            <img src="https://cosmic-seea.neocities.org/20260826_004752_0000.png" class="post-pfp" alt="PFP">
+            <span class="post-username">Seea-Star</span>
+          </div>
+          <img src="https://raw.githubusercontent.com/Seea-Star/Cosmic-S-Gallery/refs/heads/main/Untitled%20Project%20(13).jpg" class="post-img" alt="Day and Night Art">
+          
+          <div class="post-actions-bar">
+            <ws-widget type="like" iid="21203"></ws-widget>
+            <button class="toggle-caption-btn" onclick="toggleCaption(this)">
+              <span class="arrow-icon">▼</span>
+            </button>
+          </div>
+          
+          <div class="post-caption-container">
+            <div class="caption-title">Day & Night (The Empire of Light)</div>
+            <p class="caption-text">
+              Originally created as a middle school project inspired by René Magritte's style. I later redesigned it digitally, playing with lighting and photo editing to merge two opposing realities into a single scene!
+            </p>
+            
+            <div style="text-align: center; margin: 10px 0;">
+              <img src="https://upload.wikimedia.org/wikipedia/en/8/8f/The_Empire_of_Light_Belgium.jpg" alt="The Empire of Light by Magritte" style="max-width: 100%; height: auto; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2);">
+            </div>
+            
+            <div class="caption-disclaimer">Not AI. Just real photos & photo editing!</div>
+          </div>
+        </div>
+
+        <!-- IMMAGINE 7 -->
+        <div class="post-card">
+          <div class="post-header">
+            <img src="https://cosmic-seea.neocities.org/20260826_004752_0000.png" class="post-pfp" alt="PFP">
+            <span class="post-username">Seea-Star</span>
+          </div>
+          <img src="https://raw.githubusercontent.com/Seea-Star/Cosmic-S-Gallery/refs/heads/main/6595c956-4a64-44bc-96a9-246b6257276e_20260827_224000_0000.jpg" class="post-img" alt="Gallery Photo">
+          <div class="post-actions-bar">
+            <ws-widget type="like" iid="21203"></ws-widget>
+          </div>
+        </div>
+
+        <!-- IMMAGINE 8 -->
+        <div class="post-card">
+          <div class="post-header">
+            <img src="https://cosmic-seea.neocities.org/20260826_004752_0000.png" class="post-pfp" alt="PFP">
+            <span class="post-username">Seea-Star</span>
+          </div>
+          <img src="https://raw.githubusercontent.com/Seea-Star/Cosmic-S-Gallery/refs/heads/main/e409e28d-e968-4aac-9160-838b74ea61cb_20260827_223219_0000.jpg" class="post-img" alt="Gallery Photo">
+          <div class="post-actions-bar">
+            <ws-widget type="like" iid="21203"></ws-widget>
+          </div>
+        </div>
+
+        <!-- IMMAGINE 9 -->
+        <div class="post-card">
+          <div class="post-header">
+            <img src="https://cosmic-seea.neocities.org/20260826_004752_0000.png" class="post-pfp" alt="PFP">
+            <span class="post-username">Seea-Star</span>
+          </div>
+          <img src="https://raw.githubusercontent.com/Seea-Star/Cosmic-S-Gallery/refs/heads/main/94611894-fbf6-4adc-aebe-7396d4784e2f_20260827_223201_0000.jpg" class="post-img" alt="Gallery Photo">
+          <div class="post-actions-bar">
+            <ws-widget type="like" iid="21203"></ws-widget>
+          </div>
+        </div>
+
+        <!-- IMMAGINE 10 -->
+        <div class="post-card">
+          <div class="post-header">
+            <img src="https://cosmic-seea.neocities.org/20260826_004752_0000.png" class="post-pfp" alt="PFP">
+            <span class="post-username">Seea-Star</span>
+          </div>
+          <img src="https://raw.githubusercontent.com/Seea-Star/Cosmic-S-Gallery/refs/heads/main/3_20260827_231708_0002.png" class="post-img" alt="Gallery Photo">
+          <div class="post-actions-bar">
+            <ws-widget type="like" iid="21203"></ws-widget>
+          </div>
+        </div>
+
+        <!-- IMMAGINE 11 -->
+        <div class="post-card">
+          <div class="post-header">
+            <img src="https://cosmic-seea.neocities.org/20260826_004752_0000.png" class="post-pfp" alt="PFP">
+            <span class="post-username">Seea-Star</span>
+          </div>
+          <img src="https://raw.githubusercontent.com/Seea-Star/Cosmic-S-Gallery/refs/heads/main/be80fdf0-c972-424b-9121-13691214e531_20260827_223055_0000.jpg" class="post-img" alt="Gallery Photo">
+          <div class="post-actions-bar">
+            <ws-widget type="like" iid="21203"></ws-widget>
+          </div>
+        </div>
+
       </div>
     </div>
 
-  </div>
-
-  <!-- Finestra modale standard per le foto normali -->
-  <div id="lightbox-modal">
-    <button id="lightbox-close">&times;</button>
-    <button id="lightbox-prev" class="lightbox-arrow">&#10094;</button>
-    <button id="lightbox-next" class="lightbox-arrow">&#10095;</button>
-    <img id="lightbox-img" src="" alt="Fullscreen View">
-  </div>
-
-  <!-- Finestra modale speciale (schermo diviso + zoomabile) per l'immagine con la scritta -->
-  <div id="interactive-modal">
-    <button id="interactive-close">&times;</button>
-    <button id="interactive-prev" class="lightbox-arrow">&#10094;</button>
-    <button id="interactive-next" class="lightbox-arrow">&#10095;</button>
-    <div class="interactive-modal-content">
-      <div class="interactive-modal-img-container">
-        <img id="interactive-modal-img" src="" alt="Day and Night Art">
-      </div>
-      <div class="interactive-modal-text-container">
-        <div class="overlay-title">Day & Night (Inspiration)</div>
-        <p class="overlay-text">
-          Originally created as a middle school project inspired by René Magritte's style. I later redesigned it digitally, playing with lighting and photo editing to merge two opposing realities into a single scene!
-        </p>
-        <div class="overlay-disclaimer">Not AI. Just real photos & photo editing!</div>
-      </div>
-    </div>
   </div>
 
   <script>
-    const modal = document.getElementById('lightbox-modal');
-    const modalImg = document.getElementById('lightbox-img');
-    const closeBtn = document.getElementById('lightbox-close');
-    const prevBtn = document.getElementById('lightbox-prev');
-    const nextBtn = document.getElementById('lightbox-next');
-
-    const intModal = document.getElementById('interactive-modal');
-    const intModalImg = document.getElementById('interactive-modal-img');
-    const intCloseBtn = document.getElementById('interactive-close');
-    const intPrevBtn = document.getElementById('interactive-prev');
-    const intNextBtn = document.getElementById('interactive-next');
-
-    const galleryImages = document.querySelectorAll('.gallery-img');
-    let currentIndex = 0;
-
-    function updateModalContent(index) {
-      const img = galleryImages[index];
-      const parentItem = img.closest('.gallery-item');
-      
-      scale = 1;
-      intScale = 1;
-      modalImg.style.transform = `scale(1)`;
-      intModalImg.style.transform = `scale(1)`;
-
-      if (parentItem.classList.contains('interactive')) {
-        modal.style.display = 'none';
-        intModal.style.display = 'flex';
-        intModalImg.src = img.src;
-      } else {
-        intModal.style.display = 'none';
-        modal.style.display = 'flex';
-        modalImg.src = img.src;
-      }
+    function toggleCaption(button) {
+      const card = button.closest('.post-card');
+      card.classList.toggle('open');
     }
-
-    galleryImages.forEach((img, index) => {
-      img.addEventListener('click', (e) => {
-        currentIndex = index;
-        updateModalContent(currentIndex);
-      });
-    });
-
-    function showPrev(e) {
-      e.stopPropagation();
-      currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
-      updateModalContent(currentIndex);
-    }
-
-    function showNext(e) {
-      e.stopPropagation();
-      currentIndex = (currentIndex + 1) % galleryImages.length;
-      updateModalContent(currentIndex);
-    }
-
-    prevBtn.addEventListener('click', showPrev);
-    nextBtn.addEventListener('click', showNext);
-    intPrevBtn.addEventListener('click', showPrev);
-    intNextBtn.addEventListener('click', showNext);
-
-    // Zoom foto normali
-    let scale = 1;
-    modalImg.addEventListener('click', (e) => {
-      e.stopPropagation();
-      scale = scale === 1 ? 1.8 : 1;
-      modalImg.style.transform = `scale(${scale})`;
-    });
-
-    // Zoom foto interattiva nel modale diviso
-    let intScale = 1;
-    intModalImg.addEventListener('click', (e) => {
-      e.stopPropagation();
-      intScale = intScale === 1 ? 1.8 : 1;
-      intModalImg.style.transform = `scale(${intScale})`;
-    });
-
-    function closeAllModals() {
-      modal.style.display = 'none';
-      intModal.style.display = 'none';
-      scale = 1;
-      modalImg.style.transform = `scale(1)`;
-      intScale = 1;
-      intModalImg.style.transform = `scale(1)`;
-    }
-
-    closeBtn.addEventListener('click', closeAllModals);
-    modal.addEventListener('click', closeAllModals);
-    modalImg.addEventListener('click', (e) => { e.stopPropagation(); });
-
-    intCloseBtn.addEventListener('click', closeAllModals);
-    intModal.addEventListener('click', closeAllModals);
-    document.querySelector('.interactive-modal-content').addEventListener('click', (e) => {
-      e.stopPropagation();
-    });
   </script>
 
 </body>
 </html>
-
